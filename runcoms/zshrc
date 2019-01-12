@@ -10,6 +10,66 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+# Set PATH to include Spocker Scripts
+if [ -d /Users/davidgilmore/repositories/spocker/bin ] ; then
+    PATH=$PATH:/Users/davidgilmore/repositories/spocker/bin
+fi
+
+# SHORTCUT ALIASES
+alias randall='ssh dgilmore@admin002.spotx.randall.lod'
+alias admin='cd ~/repositories/spotx-web-admin'
+alias pubtools='cd ~/repositories/spotx-web-pubtools'
+alias lady='cd ~/repositories/spotx-web-lady'
+alias vmap='cd ~/repositories/spotx-web-vmap'
+alias urm='cd ~/repositories/spotx-web-thurman'
+alias cats='highlight -O ansi'
+alias pocket='cd ~/Projects/pocket-cli/; python ~/Projects/pocket-cli/pocket.py'
+alias gensecret='node -e "console.log(require('\''crypto'\'').randomBytes(32).toString('\''hex'\''));"'
+alias did="vim +'normal Go' +'r!date' ~/did.txt"
+
 # Customize to your needs...
 
+# Custom git-push command
+# Reverts all (added but not commited) changes in a repo project
+function revert-uncommited() {
+  repo forall -vc "git reset --hard"
+}
 
+# Echos the manifest name based on the current directory, example,
+# if directory is  ~/repoman/repositories/spotx-web-admin, this
+# function echos 'spotx-web-admin.xml'
+function get-manifest-name() {
+  CURRENT=`pwd`
+  BASENAME=`basename "$CURRENT"`
+  MANIFEST=$BASENAME.xml
+  echo $MANIFEST
+}
+
+# repo inits a project, expects a single argument specifiying the
+# branch name to init, example, 'repo-init master.next'
+function repo-init() {
+  revert-uncommited
+  repo init -u ssh://gerrit:29418/manifest -m $(get-manifest-name) -b $1 && repo sync -d  && repo sync
+  if [ "$2" = "full" ]; then
+    spocker cc ade
+    make build
+  fi
+}
+
+# Set Liquibase Home so classpath works.
+export LIQUIBASE_HOME=/opt/liquibase
+
+
+function make-alias() {
+  echo "alias $1='$2'" >> ~/.zshrc
+  source ~/.zshrc
+}
+
+function git-push() {
+  git push origin HEAD:refs/for/${1:-master} 
+}
+
+alias dockstop='docker stop $(docker ps -aq)'
+alias dockrm='docker rm $(docker ps -aq)'
+
+export TILLER_NAMESPACE=tiller--science
