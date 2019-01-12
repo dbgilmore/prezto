@@ -25,7 +25,6 @@ alias urm='cd ~/repositories/spotx-web-thurman'
 alias cats='highlight -O ansi'
 alias pocket='cd ~/Projects/pocket-cli/; python ~/Projects/pocket-cli/pocket.py'
 alias gensecret='node -e "console.log(require('\''crypto'\'').randomBytes(32).toString('\''hex'\''));"'
-alias did="vim +'normal Go' +'r!date' ~/did.txt"
 
 # Customize to your needs...
 
