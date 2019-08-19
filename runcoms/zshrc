@@ -23,7 +23,6 @@ alias lady='cd ~/repositories/spotx-web-lady'
 alias vmap='cd ~/repositories/spotx-web-vmap'
 alias urm='cd ~/repositories/spotx-web-thurman'
 alias cats='highlight -O ansi'
-alias pocket='cd ~/Projects/pocket-cli/; python ~/Projects/pocket-cli/pocket.py'
 alias gensecret='node -e "console.log(require('\''crypto'\'').randomBytes(32).toString('\''hex'\''));"'
 
 # Customize to your needs...
@@ -72,3 +71,17 @@ alias dockstop='docker stop $(docker ps -aq)'
 alias dockrm='docker rm $(docker ps -aq)'
 
 export TILLER_NAMESPACE=tiller--science
+
+function kilo() {
+  ~/Projects/kilo/kilo ${1:-}
+}
+
+function pocket() {
+  start=$(pwd)
+  cd ~/Projects/pocket-cli
+  python ~/Projects/pocket-cli/pocket.py
+  cd $start
+}
+
+alias db-debug='docker-compose -f docker_thurman/dependencies.yml up db'
+alias db-reset='docker-compose -f docker_thurman/dependencies.yml down && docker-compose -f docker_thurman/dependencies.yml build'
